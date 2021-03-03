@@ -15,3 +15,14 @@ export const typeDefs = gql`
     id: Int! @external
   }
 `;
+
+
+export interface IUser {
+  id: number;
+  name: string;
+  products?:IProduct[]
+}
+
+export interface IProduct {
+  id: number;
+}

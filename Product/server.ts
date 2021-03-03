@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
-import express from "express";
+import express, {Application} from "express";
 import cookieParser from "cookie-parser";
 import { ApolloServer } from "apollo-server-express";
 import { buildFederatedSchema } from "@apollo/federation";
 import { typeDefs } from "./schema";
 import { resolvers } from "./resolver";
-
 import { authCheck } from "../Auth/utils";
 dotenv.config();
 
@@ -17,13 +16,13 @@ app.use(authCheck());
 const apolloServer = new ApolloServer({
   schema: buildFederatedSchema({
     typeDefs,
-    resolvers,
+    resolvers: resolvers as any,
   }),
   context: (req, res) => ({ req, res }),
 });
 
-apolloServer.applyMiddleware({ app, cors: false });
+apolloServer.applyMiddleware({ app: app as Application, cors: false });
 
-app.listen(parseInt(process.env.PRODUCT_PORT), () => {
+app.listen(parseInt(process.env.PRODUCT_PORT as string), () => {
   console.log(`Product server started at ${process.env.PRODUCT_DOMAIN}`);
 });
