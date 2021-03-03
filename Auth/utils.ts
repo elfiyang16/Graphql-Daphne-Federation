@@ -14,11 +14,11 @@ export const authCheck = () => {
       )
     ) {
       next();
-      return;
     }
 
-    if (!req.headers["authorization"])
+    if (!req.headers["authorization"]){
       res.status(401).send("Auth token required");
+    }
 
     if (
       checkHeaderFromRequest(
@@ -33,7 +33,6 @@ export const authCheck = () => {
       )
     ) {
       next();
-      return;
     }
     /* default to unauthorised */
     res.status(401);

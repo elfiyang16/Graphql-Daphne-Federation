@@ -1,22 +1,29 @@
 import dotenv from "dotenv";
 import express from "express";
+import cookieParser from "cookie-parser";
 import { ApolloServer } from "apollo-server-express";
 import { buildFederatedSchema } from "@apollo/federation";
 import { typeDefs } from "./schema";
 import { resolvers } from "./resolver";
+import { authCheck } from "../Auth/utils";
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+
+app.use(cookieParser());
+app.use(authCheck());
 
 const apolloServer = new ApolloServer({
-  schema: buildFederatedSchema({ typeDefs, resolvers }),
-  context: ({ req, res }) => ({ req, res }),
+  schema: buildFederatedSchema({
+    typeDefs,
+    resolvers: resolvers as any,
+  }),
+  context: (req, res) => ({ req, res }),
 });
-// TODO: resolve cors
+
 apolloServer.applyMiddleware({ app, cors: false });
 
-app.listen(parseInt(process.env.AUTH_PORT), () => {
-  console.log(`Auth server started at ${process.env.AUTH_DOMAIN}`);
+app.listen(parseInt(process.env.USER_PORT as string), () => {
+  console.log(`User server started at ${process.env.USER_DOMAIN}`);
 });

@@ -23,9 +23,7 @@ export const resolvers = {
     },
 
     async products(root, args, context) {
-      return Object.entries(products).map((p) => {
-        return { ...p[1], id: p[0] };
-      });
+      return products
     },
   },
 };
